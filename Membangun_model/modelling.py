@@ -64,14 +64,7 @@ with mlflow.start_run(run_name="RandomForest_Basic_Advanced_Lokal"):
     f1 = f1_score(y_test, y_pred)
     roc_auc = roc_auc_score(y_test, y_proba)
     
-    # --- 5. Manual logging (walaupun autolog aktif) ---
-    mlflow.log_metric("test_accuracy", accuracy)
-    mlflow.log_metric("test_precision", precision)
-    mlflow.log_metric("test_recall", recall)
-    mlflow.log_metric("test_f1", f1)
-    mlflow.log_metric("test_roc_auc", roc_auc)
-    
-    # --- 6. ARTEFAK TAMBAHAN 1: Confusion Matrix ---
+    # --- ARTEFAK TAMBAHAN 1: Confusion Matrix ---
     cm = confusion_matrix(y_test, y_pred)
     plt.figure(figsize=(8, 6))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
@@ -81,10 +74,11 @@ with mlflow.start_run(run_name="RandomForest_Basic_Advanced_Lokal"):
     plt.xlabel('Predicted')
     plt.ylabel('Actual')
     plt.tight_layout()
+    plt.savefig('confusion_matrix.png')
     mlflow.log_artifact('confusion_matrix.png')
     plt.close()
     
-    # --- 7. ARTEFAK TAMBAHAN 2: ROC Curve ---
+    # --- ARTEFAK TAMBAHAN 2: ROC Curve ---
     fpr, tpr, _ = roc_curve(y_test, y_proba)
     plt.figure(figsize=(8, 6))
     plt.plot(fpr, tpr, 'b-', linewidth=2, label=f'ROC Curve (AUC = {roc_auc:.3f})')
@@ -95,10 +89,11 @@ with mlflow.start_run(run_name="RandomForest_Basic_Advanced_Lokal"):
     plt.legend(loc='lower right')
     plt.grid(alpha=0.3)
     plt.tight_layout()
+    plt.savefig('roc_curve.png')
     mlflow.log_artifact('roc_curve.png')
     plt.close()
     
-    # --- 8. ARTEFAK TAMBAHAN 3: Feature Importance ---
+    # --- ARTEFAK TAMBAHAN 3: Feature Importance ---
     feature_importance = pd.DataFrame({
         'feature': X.columns,
         'importance': model.feature_importances_
@@ -109,13 +104,14 @@ with mlflow.start_run(run_name="RandomForest_Basic_Advanced_Lokal"):
     plt.title('Top 10 Feature Importance - Random Forest')
     plt.xlabel('Importance Score')
     plt.tight_layout()
+    plt.savefig('feature_importance.png')
     mlflow.log_artifact('feature_importance.png')
     plt.close()
     
-    # --- 9. Log model ---
+    # --- Log model ---
     mlflow.sklearn.log_model(model, "random_forest_model")
     
-    # --- 10. Print hasil ---
+    # --- Print hasil ---
     print("\n" + "="*50)
     print("HASIL MODEL RANDOM FOREST")
     print("="*50)

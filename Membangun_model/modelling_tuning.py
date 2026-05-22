@@ -103,14 +103,7 @@ with mlflow.start_run(run_name="RandomForest_Tuning_Advanced"):
     recall = recall_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred)
     roc_auc = roc_auc_score(y_test, y_proba)
-    
-    # --- 7. Manual logging ---
-    mlflow.log_metric("test_accuracy", accuracy)
-    mlflow.log_metric("test_precision", precision)
-    mlflow.log_metric("test_recall", recall)
-    mlflow.log_metric("test_f1", f1)
-    mlflow.log_metric("test_roc_auc", roc_auc)
-    
+
     # --- 8. ARTEFAK 1: Confusion Matrix ---
     cm = confusion_matrix(y_test, y_pred)
     plt.figure(figsize=(8, 6))
@@ -119,6 +112,7 @@ with mlflow.start_run(run_name="RandomForest_Tuning_Advanced"):
                 yticklabels=['Not Approved', 'Approved'])
     plt.title('Confusion Matrix - Best Model (Tuning)')
     plt.tight_layout()
+    plt.savefig('confusion_matrix_tuning.png')
     mlflow.log_artifact('confusion_matrix_tuning.png')
     plt.close()
     
@@ -133,6 +127,7 @@ with mlflow.start_run(run_name="RandomForest_Tuning_Advanced"):
     plt.legend()
     plt.grid(alpha=0.3)
     plt.tight_layout()
+    plt.savefig('roc_curve_tuning.png')
     mlflow.log_artifact('roc_curve_tuning.png')
     plt.close()
     
@@ -146,6 +141,7 @@ with mlflow.start_run(run_name="RandomForest_Tuning_Advanced"):
     sns.barplot(data=feature_importance.head(10), x='importance', y='feature', palette='viridis')
     plt.title('Top 10 Feature Importance - Best Model (Tuning)')
     plt.tight_layout()
+    plt.savefig('feature_importance_tuning.png')
     mlflow.log_artifact('feature_importance_tuning.png')
     plt.close()
     
